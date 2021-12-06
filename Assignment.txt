@@ -1,0 +1,187 @@
+create table salespeople (snum int, sname varchar(100), city varchar(100), comm float);
+insert into salespeople values(1001,'Peel','London',0.12),(1002,'Serres','San Jose',0.13),(1004,'Motika','London',0.11),
+(1007,'Rifkin','Barcelona',0.15),(1003,'AxelRod','New York',0.10),(1005,'Fran','London',0.26);
+
+create table customers (cnum int, cname varchar(100), city varchar(100),rating int, snum int);
+insert into customers values(2001,'Hoffman','London',100,1001),(2002,'giovanni','Rome',200,1003),(2003,'Liu','San Jose',200,1002),
+(2004,'Grass','Berlin',300,1002),(2006,'Clemens','London',100,1001),(2008,'Cisneros','San Jose',300,1007),(2007,'Pereira','Rome',100,1004);
+
+create table orders (onum int, amt float, odate date ,cnum int, snum int);
+insert into orders values(3001,18.69,'1996-03-10',2008,1007),(3003,767.19,'1996-03-10',2001,1001),(3002,1900.10,'1996-03-10',2007,1004),
+(3005,5160.45,'1996-03-10',2003,1002),(3006,1098.16,'1996-03-10',2008,1007),(3009,1713.23,'1996-04-10',2002,1003),(3007,75.75,'1996-04-10',2002,1003),
+(3008,4723.00,'1996-05-10',2006,1001),(3010,1309.95,'1996-06-10',2004,1002),(3011,9891.88,'1996-06-10',2008,1001);
+
+1)show columns from salespeople;
+2)select cname from customers where rating = 100;
+3)select * from customers where city is null;
+4)select odate,max(amt),sname from orders join salespeople on orders.snum=salespeople.snum group by odate;
+5)select * from orders order by cnum,cnum desc;
+6)select sname from orders join salespeople on orders.snum=salespeople.snum group by onum;
+7)select sname from customers join salespeople on customers.snum=salespeople.snum;
+8)select sname, count(cname) cust_count from salespeople join customers on salespeople.snum=customers.snum group by sname order by cust_count desc limit 2;
+9)select sname, count(cname) cust_count from salespeople join customers on salespeople.snum=customers.snum group by sname order by cust_count desc;
+10)select * from customers where city = 'San Jose';
+11)select * from customers join salespeople on customers.city = salespeople.city;
+12)select max(amt),sname from orders join salespeople on orders.snum=salespeople.snum group by sname;
+13)select cname from customers where city='San Jose' and rating > 200;
+14)select sname,comm from salespeople where city = 'London';
+15)select * from orders join salespeople on orders.snum = salespeople.snum where sname='Motika';
+16)select cname from customers join orders on customers.cnum=orders.cnum where odate='1996/03/10' group by cname;
+17)select amt, odate from orders where amt > any(select amt from orders where odate='1996-06-10');
+18)select onum,amt from orders where amt > 1309.95 and odate != '1996/06/10';
+19)select sname from salespeople where exists( select rating from customers where salespeople.snum=customers.snum and rating = 300);
+20)select cname from customers order by rating ;
+21)select cnum, cname from customers where cnum > ( select snum+1000  from salespeople where sname = 'Serres');
+22)select snum,sname, comm * 100  from salespeople;
+23)select sname,odate,onum,amt from customers,salespeople,orders where customers.snum=salespeople.snum and customers.cnum=orders.cnum and amt>=3000;
+24)select * from orders where odate ='1996/03/10' order by amt desc limit 1;
+25)select cname, city from customers where snum=1002;
+26)select cname from customers where rating >200;
+27)select snum, count(snum) count_of_salespeople from orders group by snum;
+28)select cname, sname, comm from customers, salespeople where comm > 0.12 and customers.snum = salespeople.snum;
+29)select count(c.cnum),s.sname from salespeople s join customers c on s.snum=c.snum group by s.snum having count(c.cnum) > 1;
+30)select sname,cname from salespeople ,customers where salespeople.city=customers.city;
+31)select sname from salespeople where sname like 'P__l';
+32)select onum,cname from orders,customers where cname = 'Cisneros' and customers.cnum=orders.cnum;
+33)select max(orders.amt),sname from orders join salespeople on orders.snum=salespeople.snum where sname = 'Serres' or sname = 'Rifkin' group by sname;
+34)select snum,sname,comm,city from salespeople;
+35) select cname from customers where cname between 'a' and 'g';
+36)select * from customers join salespeople on customers.snum=salespeople.snum;
+   select * from customers join orders on customers.snum=orders.snum;
+37)select *  from orders where amt > ( select avg(amt)  from orders where odate = '1996/04/10');
+38)select cname, cnum, city from customers where rating = (select max(rating) from customers);
+39)select sum(amt), odate from orders group by odate;
+40)select rating,cname from customers where city = 'San Jose';
+41)select * from orders where amt < any ( select amt from orders, customers where orders.cnum = customers.cnum and city ='San Jose');
+42) select * from orders where amt>(select avg(amt) from orders);
+43)select max(rating),city from customers group by city;
+44)select onum, sname,rating, comm, amt*comm commission from salespeople, orders, customers where orders.cnum = customers.cnum and orders.snum=salespeople.snum and customers.rating>100;
+45)select * from customers where rating > ( select avg(rating) from customers where city='San Jose');
+46)select a.sname,b.sname from salespeople a,salespeople b where a.snum=b.snum;
+47)select sname,city from salespeople where city ='Barcelona' or city = 'London';
+48)select count(c.cnum),s.sname from salespeople s join customers c on s.snum=c.snum group by s.snum having count(c.cnum) =1;
+49)select a.cname,b.cname,salespeople.sname from customers a,customers b,salespeople where a.snum=b.snum and a.snum=salespeople.snum;
+50)select * from orders where amt >1000;
+51)select onum,cname from orders,customers where customers.cnum = orders.cnum;
+52)
+53)select cname from customers where rating >= any (select rating from customers where city ='Serres');
+54)select * from orders where odate ='1996/03/10' or odate='1996/04/10';
+55)select cname,onum from customers,orders where customers.cnum=orders.cnum;
+56)select * from customers where rating > (select max(rating) from customers where city='Rome');
+57)select * from customers where ( rating <= 100 and city = 'Rome') or rating >100;
+58)select * from customers where snum=1001;
+59)select sname, sum(amt) from orders o, salespeople s where o.snum = s.snum group by sname having sum(amt)> (select max(amt) orders);
+60)select * from orders where amt is null;
+61)select * from salespeople join customers on salespeople.snum = customers.snum where rating < 200;
+62)select sname,amt*comm as commission from salespeople,orders where orders.snum=salespeople.snum;
+63)select cname,city,rating from customers where rating = (select rating from customers where cname='Hoffman');
+64) select s.sname,c.cname from salespeople s join customers c on s.snum = c.snum order by s.sname,c.cname;
+65)select c.cname,c.rating from customers c join orders o on c.cnum=o.cnum where o.amt >(select avg(amt) from orders );
+66)select sum(amt) from orders;
+67)select onum,amt,odate from orders;
+68)select count(rating) from customers;
+69)select onum, sname,cname from orders,salespeople,customers where orders.snum=salespeople.snum and orders.snum=customers.snum group by onum;
+70)select sname,amt*comm as commission from salespeople,orders where orders.snum=salespeople.snum and city='London';
+71)select a.sname,a.city,b.cname,b.city as cus_city from salespeople a,customers b where a.snum=b.snum and a.city!= any ( select b.city from customers);
+72)select * from salespeople s where exists(select 1 from customers c where c.city=s.city and s.snum <> c.snum);
+73)select * from (select sname sp_name,cname from salespeople join customers on salespeople.snum=customers.snum) as t where sp_name='Peel' or sp_name='Motika';
+74)
+75)select * from (select onum,sname,city s_city from orders left join salespeople on salespeople.snum=orders.snum) as t where s_city = 'London';
+76)select a.sname,a.city,b.cname,b.city as cus_city from salespeople a,customers b where a.snum=b.snum and a.city!= any ( select b.city from customers);
+77)select * from salespeople where snum in (select snum from orders group by snum having count(snum) >1) group by sname;
+78)select * from customers where snum in ( select snum from customers where  cnum in (select cnum from orders) group by snum having count(*)>1);
+79)select * from customers where cname like 'c%';
+80)select city, max(rating) highest_rating from customers group by city;
+81)select snum from orders group by snum having count(snum) >1;
+82)select rating,cname,cnum,snum from customers group by cname order by rating desc;
+83)select avg(comm) from salespeople;
+84)select *,cname from orders,customers where orders.cnum=customers.cnum and cname='Hoffman';
+85)select * from salespeople where comm between 0.10 and 0.12;
+86)select sname,city from salespeople where city ='London' and  comm >0.10;
+87)elect * from orders where (amt < 100 or not (odate = 10/03/1996 and cnum > 2003));
+88)select * from (select customers.cname,orders.amt, dense_rank() over ( partition by cname order by amt desc) rn from customers join orders on customers.cnum = orders.cnum ) as t where rn =1;
+89) select * from customers where cname like 'g%' limit 1;
+90)select count(city) from customers where city is not null;
+91)select avg(amt) from orders;
+92)SELECT * FROM ORDERS WHERE NOT (odate = 10/03/96 OR snum > 1006) AND amt >=1500;
+93)select * from customers where city != 'San Jose' and rating > 200;
+94)SELECT snum, sname city, comm FROM salespeople WHERE (comm > + 0.12 OR comm < 0.14);
+95)SELECT * FROM orders WHERE NOT ((odate = 10/03/96 AND snum > 1002) OR amt > 2000.00);
+96)select sname, cname,s.snum, s.city salespeople_city, c.city customers_city from customers c join salespeople s on c.snum = s.snum where c.city <> s.city;
+97)select s.comm,s.sname,c.cname,c.rating from salespeople s, customers c where s.snum=c.snum and comm > 0.11 and rating < 250;
+98)select s1.sname, s1.city,s1.comm from salespeople s1 join salespeople s2 on s1.snum = s2.snum where s1.city = s2.city and s1.comm <> s2.comm;
+99)select sname,amt, s.snum, sum(o.amt * s.comm) total_comm from salespeople s join orders o on s.snum = o.snum group by sname order by total_comm desc limit 1;
+100)select c.cname, count(o.cnum)c_orders, max(c.rating) max_rating from orders o join customers c on o.cnum = c.cnum group by o.cnum having c_orders > 1 and max_rating;
+101)select distinct case when s.cname=r.cname then 'Yes' else 'No' end  from(
+select * from (
+select cname,dense_rank() over(order by total_amt desc) spend_ranking
+from
+(select cname,sum(amt) total_amt
+from orders o , customers c 
+where o.cnum=c.cnum group by cname) as t) as t2  where spend_ranking=1) s
+,
+(select * from (
+select cname,dense_rank() over(order by rating desc) highest_rating
+from customers) as t where highest_rating=1) r;
+102)select cname,rating from customers order by rating desc;
+103)select c.cname,o.odate,o.onum from customers c join orders o on c.cnum=o.cnum where cname='Hoffman';
+104)select sname,count(sname) from salespeople group by comm;
+105)select * from salespeople s join orders o on s.snum = o.snum where odate not between '1996-03-10' and '1996-05-10';
+106)select s.sname, count(o.odate) from salespeople s join orders o on s.snum=o.snum group by sname;
+107)select c.cname, count(o.odate) from customers c join orders o on c.cnum=o.cnum group by cname;
+108)select snum,onum,odate,max(amt) from orders group by odate;
+109)select sname,amt, s.snum, sum(o.amt * s.comm) total_comm from salespeople s join orders o on s.snum = o.snum group by sname order by total_comm desc limit 1;
+110)select s.sname,count(onum) from salespeople s join orders o on s.snum<>o.snum order by onum;
+111)
+112)select cname,rating from customers order by rating;
+    select c1.cname,c2.cname from customers c1 join customers c2 on c1.rating = c2.rating group by c1.rating;
+113)select * from orders where amt < (select avg(orders.amt) from orders group by odate having odate ='1996-04-10');
+114)select o.onum,o.amt,o.odate,c.cname from orders o join customers c on o.cnum=c.cnum where amt > (select avg(orders.amt) from orders);
+115)select * from customers where rating > (select avg(rating) from customers group by city having city='San Jose');
+116)select s.sname,sum(o.amt) total_sum from salespeople s join orders o on s.snum=o.snum group by s.sname having total_sum > (select max(amt) from orders);
+117)select s.sname,s.snum, count(c.cnum) from salespeople s join customers c on s.snum=c.snum group by s.snum having count(c.cnum) >1;
+118)select s.sname,s.snum,s.city,c.cname,c.city from salespeople s join customers c on s.snum=c.snum and s.city<>c.city ;
+119)
+120)select s.sname,c.city from salespeople s join customers c on s.snum=c.snum where c.city ='Berlin';
+121)
+122)
+123)select o.odate,o.onum,max(o.amt),s.city from salespeople s join orders o on s.snum=o.snum group by s.snum;
+124)
+125)(select sum(o.amt-(o.amt*s.comm)) from salespeople s,orders o where s.snum=o.snum);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
